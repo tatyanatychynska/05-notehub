@@ -1,8 +1,8 @@
 import css from "./App.module.css";
 import SearchBox from "../SearchBox/SearchBox";
 import Pagination from "../Pagination/Pagination";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteNote, fetchNotes } from "../../services/noteService";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { fetchNotes } from "../../services/noteService";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Loader from "../Loader/Loader";
 import { useDebouncedCallback } from "use-debounce";
@@ -23,15 +23,10 @@ function App() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", query, page],
     queryFn: () => fetchNotes(query, page, 12),
+    placeholderData: keepPreviousData,
   });
   const notes = data?.notes ?? [];
   const totalPages = data?.totalPages ?? 0;
-
-  const queryClient = useQueryClient();
-  const { mutate: handleDelete } = useMutation({
-    mutationFn: deleteNote,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notes"] }),
-  });
 
   return (
     <div className={css.app}>
@@ -44,15 +39,13 @@ function App() {
             onPageChange={setPage}
           />
         )}
-        {
-          <button className={css.button} onClick={() => setIsModalOpen(true)}>
-            Create note +
-          </button>
-        }
+        <button className={css.button} onClick={() => setIsModalOpen(true)}>
+          Create note +
+        </button>
       </header>
       {isError && <ErrorMessage />}
       {isLoading && <Loader />}
-      {notes.length > 0 && <NoteList notes={notes} onDelete={handleDelete} />}
+      {notes.length > 0 && <NoteList notes={notes} />}
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <NoteForm onClose={() => setIsModalOpen(false)} />
