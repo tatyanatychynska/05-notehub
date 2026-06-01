@@ -1,9 +1,15 @@
 import axios from "axios";
-import type { NewNoteBody, Note } from "../types/note";
+import type { Note, NoteTag } from "../types/note";
 
 const NOTEHUB_TOKEN = import.meta.env.VITE_NOTEHUB_TOKEN;
 axios.defaults.baseURL = "https://notehub-public.goit.study/api";
 axios.defaults.headers.common["Authorization"] = `Bearer ${NOTEHUB_TOKEN}`;
+
+export interface NewNoteBody {
+  title: string;
+  content: string;
+  tag: NoteTag;
+}
 
 export interface FetchNotesResponse {
   notes: Note[];

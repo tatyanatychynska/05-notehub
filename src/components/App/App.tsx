@@ -46,7 +46,7 @@ function App() {
         )}
         {
           <button className={css.button} onClick={() => setIsModalOpen(true)}>
-            Create new
+            Create note +
           </button>
         }
       </header>

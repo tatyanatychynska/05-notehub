@@ -4,6 +4,7 @@ import { useId } from "react";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote } from "../../services/noteService";
+import type { NoteTag } from "../../types/note";
 
 interface NoteFormProps {
   onClose: () => void;
@@ -12,7 +13,7 @@ interface NoteFormProps {
 interface NoteFormValuesProps {
   title: string;
   content: string;
-  tag: "Work" | "Personal" | "Meeting" | "Shopping" | "Todo";
+  tag: NoteTag;
 }
 
 const NoteSchema = Yup.object({
